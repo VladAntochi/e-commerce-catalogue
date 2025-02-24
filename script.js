@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const searchButton = document.getElementById("search-btn");
+    searchButton.addEventListener("click", searchProducts);
+
+});
+
+// Store API data globally
 let apiData = [];
 let currentPage = 1;
 const itemsPerPage = 8;
@@ -7,11 +14,9 @@ async function fetchData() {
     const apiUrl = 'https://fakestoreapi.com/products';
     try {
         const response = await fetch(apiUrl);
-
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-
         apiData = await response.json();
         displayData();
     } catch (error) {
@@ -21,16 +26,17 @@ async function fetchData() {
 }
 
 // Function to display products based on pagination
-function displayData() {
+function displayData(filteredData = null) {
     const container = document.getElementById('data-container');
     container.innerHTML = '';
 
-    // Calculate start and end indexes
+    // Use filteredData if provided, otherwise use full apiData
+    const dataToDisplay = filteredData || apiData;
+
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    const paginatedItems = apiData.slice(start, end);
+    const paginatedItems = dataToDisplay.slice(start, end);
 
-    // Display only items for the current page
     paginatedItems.forEach(product => {
         const productCard = document.createElement('div');
         productCard.classList.add('product-card');
@@ -45,33 +51,48 @@ function displayData() {
         container.appendChild(productCard);
     });
 
-    updatePaginationButtons();
+    updatePaginationButtons(dataToDisplay);
+}
+
+// Search function
+function searchProducts() {
+    let input = document.getElementById('search-bar').value.toLowerCase();
+
+    // Filter API data based on search input
+    let filteredData = apiData.filter(product =>
+        product.title.toLowerCase().includes(input)
+    );
+
+    // Reset to first page and display filtered results
+    currentPage = 1;
+    displayData(filteredData);
 }
 
 // Function to update pagination controls
-function updatePaginationButtons() {
-    const totalPages = Math.ceil(apiData.length / itemsPerPage);
-    document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+function updatePaginationButtons(dataSet) {
+    const totalPages = Math.ceil(dataSet.length / itemsPerPage);
+    document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages || 1}`;
 
     document.getElementById('prev-btn').disabled = currentPage === 1;
     document.getElementById('next-btn').disabled = currentPage === totalPages;
 }
 
-// Event listeners for pagination buttons
-document.getElementById('prev-btn').addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        displayData();
-    }
-});
+// Pagination event listeners
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayData();
+        }
+    });
 
-document.getElementById('next-btn').addEventListener('click', () => {
-    const totalPages = Math.ceil(apiData.length / itemsPerPage);
-    if (currentPage < totalPages) {
-        currentPage++;
-        displayData();
-    }
-});
+    document.getElementById('next-btn').addEventListener('click', () => {
+        const totalPages = Math.ceil(apiData.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayData();
+        }
+    });
 
-// Load data when the page loads
-window.onload = fetchData;
+    fetchData();
+});

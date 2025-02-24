@@ -10,6 +10,14 @@
 
 <div class="container">
     <h1>Product List</h1>
+
+    <!-- Search Bar with Button -->
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search products...">
+        <button id="search-btn">Search</button>
+    </div>
+
+
     <div id="data-container" class="product-grid"></div>
 
     <!-- Pagination Controls -->

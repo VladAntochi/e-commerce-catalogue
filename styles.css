@@ -149,3 +149,41 @@ h2 {
     font-size: 18px;
     font-weight: bold;
 }
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+#search-bar {
+    width: 300px;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid navy;
+    border-radius: 5px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+    #search-bar:focus {
+        border-color: darkblue;
+    }
+
+#search-btn {
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+    #search-btn:hover {
+        background-color: darkorange;
+    }
