@@ -45,12 +45,11 @@ function displayData(filteredData = null) {
             <img src="${product.image}" alt="${product.title}">
             <h2>${product.title}</h2>
             <p class="price">&pound;${product.price.toFixed(2)}</p>
-            <button class="view-btn">View Details</button>
+            <a href="productDetails.php?product-id=${product.id}" class="view-btn">View Details</a>        
         `;
 
         container.appendChild(productCard);
     });
-
     updatePaginationButtons(dataToDisplay);
 }
 
